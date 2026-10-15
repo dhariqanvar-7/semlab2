@@ -1,5 +1,5 @@
 pipeline{
-    agent any{
+    agent any
         stages{
             stage('install'){
                 steps{
@@ -11,6 +11,5 @@ pipeline{
                     bat 'npm run build'
                 }
             }
-        }
     }
 }
