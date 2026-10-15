@@ -7,21 +7,43 @@ function App() {
     {id:3,name:"shirt",category:"Clothing",price:10000},
     {id:1,name:"Pant",category:"Clothing",price:10000}
   ]
+  const[mobile,setMobile]=useState(0)
+  const[laptop,setLap]=useState(0)
+  const[shirt,setShirt]=useState(0)
+  const[pant,setPant]=useState(0)
   const [name,setName]=useState([])
   const [search,setSearch]=useState("")
   const [filter,setFilter]=useState("ALL")
+  const[disp,setDisp]=useState(0)
+  const[gst,setGst]=useState(0)
+  const[ship,setShip]=useState(0)
   const res=products.filter((p,i)=>p.name.toLowerCase().includes(search.toLowerCase()))
             .filter((p,i)=>filter=="ALL"||p.category.toLowerCase().includes(filter.toLowerCase()))
-  const qty=[]
+  
   const [cart,setCart]=useState([])
   const[price,setPrice]=useState(0)
   function add(e,i){
     e.preventDefault()
     if(name.includes(products[i].name)){
-      qty[products[i].id]+=1
-      console.log(qty[products[i].id])
-      const t=price+products[i].price
+       const t=price+products[i].price
       setPrice(t)
+      if(products[i].name=="mobile"){
+      const t=mobile+1;
+      setMobile(t)
+    }
+    else if(products[i].name=="Laptop"){
+      const t=laptop+1
+      setLap(t)
+    }
+    else if(products[i].name=="shirt"){
+      const t=shirt+1
+      setShirt(t)
+    }
+    else if(products[i].name=="Pant"){
+      const t=pant+1
+      setPant(t)
+    }
+     
     }
     else{
     const p={
@@ -29,13 +51,38 @@ function App() {
       name:products[i].name,
       price:products[i].price,
     }
-    qty[p.id]="1"
+    if(p.name=="mobile"){
+      const t=mobile+1;
+      setMobile(t)
+    }
+    else if(p.name=="Laptop"){
+      const t=laptop+1
+      setLap(t)
+    }
+    else if(p.name=="shirt"){
+      const t=shirt+1
+      setShirt(t)
+    }
+    else if(p.name=="Pant"){
+      const t=pant+1
+      setPant(t)
+    }
     const t=price+products[i].price
       setPrice(t)
-    console.log(qty[p.name])
     setName([...name,p.name])
     setCart([...cart,p])
   }
+  }
+  function apply(){
+    const n=price
+    const m=disp>0?Number(price-(Number((price*disp)/100))):0
+    const k=gst>0?Number(price+(Number((price*gst)/100))):0
+    const v=ship>0?Number(price+(Number((price*ship)/100))):0
+    const total=n-m+k+v
+    setPrice(total)
+    setShip(0)
+    setGst(0)
+    setDisp(0)
   }
   return (
     <div>
@@ -51,8 +98,15 @@ function App() {
       ))}
       <h2>Cart</h2>
       {cart.map((p,i)=>(
-        <p>{p.name}--{p.price}--{qty[p.id]}</p>
+        <p>{p.name}--{p.price}--{p.name=="mobile"?mobile:(p.name=="Laptop"?laptop:(p.name=="shirt"?shirt:pant))}</p>
       ))}
+      <label>Shipping Charge</label>
+      <input type="number" value={ship} onChange={(e)=>setShip(e.target.value)} placeholder="Discount %"></input>
+      <label>GST</label>
+      <input type="number" value={gst} onChange={(e)=>setGst(e.target.value)} placeholder="Discount %"></input>
+      <label>Discount</label>
+      <input type="number" value={disp} onChange={(e)=>setDisp(e.target.value)} placeholder="Discount %"></input>
+      <button onClick={()=>apply()}>Apply</button>
       <h2>Price:{price}</h2>
     </div>
   )
